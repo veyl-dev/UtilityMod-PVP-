@@ -40,7 +40,7 @@ public final class UtilityModClient implements ClientModInitializer {
                 "key.utilitymod_pvp.toggle_hud", InputConstants.Type.KEYBOARD, InputConstants.KEY_O, category
         ));
         openSettingsKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-                "key.utilitymod_pvp.open_settings", InputConstants.Type.KEYBOARD, InputConstants.KEY_RIGHT_SHIFT, category
+                "key.utilitymod_pvp.open_settings", InputConstants.Type.KEYBOARD, InputConstants.KEY_LSHIFT, category
         ));
         toggleSprintKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.utilitymod_pvp.toggle_sprint", InputConstants.Type.KEYBOARD, InputConstants.KEY_P, category
