@@ -8,28 +8,41 @@ A lightweight, client-side Minecraft PvP utility mod for Fabric.
 - Fabric API 0.165.2+26.3
 - Java 25
 
-## Features in this initial build
-- Configurable HUD overlay with position, scale and RGB/ARGB color values
-- Totem, End Crystal, Ender Pearl, Golden Apple and Obsidian counters
-- Armor durability summary
-- Active potion effect names
-- Coordinates, FPS and connection ping
-- WASD, jump, sprint and sneak key display
-- Left/right click rate (CPS) display
-- HUD visibility toggle (default O)
-- Optional sprint toggle (default P)
+## Features
+- Configurable PvP HUD with CPS, combat item counts, armor durability, effects, coordinates, FPS, ping and keystrokes
+- In-game settings screen with independent HUD module toggles
+- Draggable HUD preview/editor
+- HUD scale control and three color themes
+- Balanced, Minimal and Combat HUD profiles
+- Left/right click rate display
+- Optional toggle sprint
 - JSON configuration at `.minecraft/config/utilitymod-pvp.json`
 
-The mod is client-side. It does not automate attacks, move inventory items, alter attack timing, or bypass server anti-cheat.
+## Controls
+| Key | Action |
+|---|---|
+| Right Shift | Open settings / HUD editor |
+| O | Toggle the HUD |
+| P | Toggle optional sprint |
+
+All key bindings can be changed in Minecraft's Controls menu.
+
+## Lightweight design
+- Client-side only; no server plugin or networking required
+- No background worker threads, polling loops or world/entity scans
+- Combat item counters are collected in one inventory pass
+- CPS uses a small rolling click history
+- HUD only builds rows for enabled modules
+- No attack automation, inventory manipulation, packet spoofing or anti-cheat bypasses
 
 ## Build
 Install JDK 25 and Gradle 9.8.0, then run:
 
 ```bash
-gradle build
+gradle --no-daemon clean build
 ```
 
-The distributable mod JAR is written to `build/libs/`.
+The distributable JAR is written to `build/libs/`.
 
 ## Install
 1. Install Fabric Loader for Minecraft 26.3.
@@ -38,7 +51,7 @@ The distributable mod JAR is written to `build/libs/`.
 4. Launch the Fabric profile.
 
 ## Configuration
-Launch the game once to generate the config file. Change feature toggles, HUD position, scale and colors in the JSON file, then restart the game.
+Launch the game once to generate the JSON configuration. Most settings can be changed in-game with Right Shift.
 
 ## License
 MIT
