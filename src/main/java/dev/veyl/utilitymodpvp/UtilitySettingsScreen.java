@@ -1,6 +1,7 @@
 package dev.veyl.utilitymodpvp;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -90,7 +91,6 @@ public final class UtilitySettingsScreen extends Screen {
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         super.extractRenderState(graphics, mouseX, mouseY, delta);
-        graphics.fill(0, 0, this.width, this.height, 0x88000000);
         graphics.text(this.font, "UTILITYMOD-PVP  /  HUD EDITOR", 12, 12, 0xFFFFFFFF, true);
         graphics.text(this.font, "Drag the preview panel anywhere above the controls.", 12, 29, 0xFFB8C5D8, false);
 
@@ -108,37 +108,38 @@ public final class UtilitySettingsScreen extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         ModConfig c = UtilityModClient.CONFIG;
         int px = Math.max(0, Math.min(this.width - 220, c.x));
         int py = Math.max(48, Math.min(this.height - 204, c.y));
-        if (button == 0 && mouseX >= px && mouseX <= px + 220 && mouseY >= py && mouseY <= py + 74) {
+        if (event.button() == 1 && event.x() >= px && event.x() <= px + 220
+                && event.y() >= py && event.y() <= py + 74) {
             dragging = true;
-            dragOffsetX = (int) mouseX - px;
-            dragOffsetY = (int) mouseY - py;
+            dragOffsetX = (int) event.x() - px;
+            dragOffsetY = (int) event.y() - py;
             return true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (dragging && button == 0) {
-            UtilityModClient.CONFIG.x = Math.max(0, Math.min(this.width - 220, (int) mouseX - dragOffsetX));
-            UtilityModClient.CONFIG.y = Math.max(48, Math.min(this.height - 204, (int) mouseY - dragOffsetY));
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        if (dragging && event.button() == 1) {
+            UtilityModClient.CONFIG.x = Math.max(0, Math.min(this.width - 220, (int) event.x() - dragOffsetX));
+            UtilityModClient.CONFIG.y = Math.max(48, Math.min(this.height - 204, (int) event.y() - dragOffsetY));
             return true;
         }
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (button == 0 && dragging) {
+    public boolean mouseReleased(MouseButtonEvent event) {
+        if (event.button() == 1 && dragging) {
             dragging = false;
             UtilityModClient.CONFIG.save();
             return true;
         }
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override
