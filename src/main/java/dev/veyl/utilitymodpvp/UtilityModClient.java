@@ -20,6 +20,7 @@ public final class UtilityModClient implements ClientModInitializer {
     public static ModConfig CONFIG;
 
     private static KeyMapping toggleHudKey;
+    private static KeyMapping openSettingsKey;
     private static KeyMapping toggleSprintKey;
     private static final Deque<Long> LEFT_CLICKS = new ArrayDeque<>();
     private static final Deque<Long> RIGHT_CLICKS = new ArrayDeque<>();
@@ -38,6 +39,9 @@ public final class UtilityModClient implements ClientModInitializer {
         toggleHudKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.utilitymod_pvp.toggle_hud", InputConstants.Type.KEYBOARD, InputConstants.KEY_O, category
         ));
+        openSettingsKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
+                "key.utilitymod_pvp.open_settings", InputConstants.Type.KEYBOARD, InputConstants.KEY_RIGHT_SHIFT, category
+        ));
         toggleSprintKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.utilitymod_pvp.toggle_sprint", InputConstants.Type.KEYBOARD, InputConstants.KEY_P, category
         ));
@@ -53,6 +57,9 @@ public final class UtilityModClient implements ClientModInitializer {
         while (toggleHudKey.consumeClick()) {
             CONFIG.enabled = !CONFIG.enabled;
             CONFIG.save();
+        }
+        while (openSettingsKey.consumeClick()) {
+            client.gui.setScreen(new UtilitySettingsScreen());
         }
         while (toggleSprintKey.consumeClick()) {
             sprintEnabled = !sprintEnabled;
