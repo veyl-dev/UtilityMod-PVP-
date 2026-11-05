@@ -84,7 +84,7 @@ public final class HudRenderer {
         graphics.fill(x, y, x + 2, y + height, config.accentColor);
         int textY = y + 5;
         for (String line : lines) {
-            graphics.drawString(client.font, line, x + 7, textY, config.textColor);
+            graphics.text(client.font, line, x + 7, textY, config.textColor, false);
             textY += lineHeight;
         }
         graphics.pose().popMatrix();
