@@ -22,21 +22,24 @@ public final class ModConfig {
     public boolean showPing = true;
     public boolean showKeystrokes = true;
     public boolean toggleSprint = false;
+
     public int x = 8;
     public int y = 8;
     public float scale = 1.0f;
     public int backgroundColor = 0x990D111B;
     public int textColor = 0xFFF2F5FA;
     public int accentColor = 0xFF78E6B1;
+    public String profile = "Balanced";
 
     public static ModConfig load() {
         try {
             if (Files.exists(FILE)) {
                 ModConfig loaded = GSON.fromJson(Files.readString(FILE), ModConfig.class);
                 if (loaded != null) {
-                    loaded.scale = Math.max(0.5f, Math.min(2.0f, loaded.scale));
+                    loaded.scale = clamp(loaded.scale, 0.65f, 1.75f);
                     loaded.x = Math.max(0, loaded.x);
                     loaded.y = Math.max(0, loaded.y);
+                    if (loaded.profile == null) loaded.profile = "Balanced";
                     return loaded;
                 }
             }
@@ -48,6 +51,43 @@ public final class ModConfig {
         return defaults;
     }
 
+    public void applyProfile(String name) {
+        profile = name;
+        switch (name) {
+            case "Minimal" -> {
+                showCps = true; showItems = true; showArmor = false; showEffects = false;
+                showCoordinates = false; showFps = false; showPing = false; showKeystrokes = false;
+            }
+            case "Combat" -> {
+                showCps = true; showItems = true; showArmor = true; showEffects = true;
+                showCoordinates = false; showFps = true; showPing = true; showKeystrokes = true;
+            }
+            default -> {
+                profile = "Balanced";
+                showCps = true; showItems = true; showArmor = true; showEffects = true;
+                showCoordinates = true; showFps = true; showPing = true; showKeystrokes = true;
+            }
+        }
+        save();
+    }
+
+    public void cycleTheme() {
+        if (accentColor == 0xFF78E6B1) {
+            accentColor = 0xFFB79CFF;
+            backgroundColor = 0x99130D1B;
+            textColor = 0xFFF6F0FF;
+        } else if (accentColor == 0xFFB79CFF) {
+            accentColor = 0xFF75D7FF;
+            backgroundColor = 0x990A1520;
+            textColor = 0xFFF0FAFF;
+        } else {
+            accentColor = 0xFF78E6B1;
+            backgroundColor = 0x990D111B;
+            textColor = 0xFFF2F5FA;
+        }
+        save();
+    }
+
     public void save() {
         try {
             Files.createDirectories(FILE.getParent());
@@ -55,5 +95,9 @@ public final class ModConfig {
         } catch (IOException exception) {
             UtilityModClient.LOGGER.error("Could not save config.", exception);
         }
+    }
+
+    private static float clamp(float value, float min, float max) {
+        return Math.max(min, Math.min(max, value));
     }
 }
