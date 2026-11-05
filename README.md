@@ -2,19 +2,21 @@
 
 A lightweight, client-side Minecraft PvP utility mod for Fabric.
 
-## Supported Minecraft versions
+## Minecraft version profiles
 
-The repository builds separate JARs for each target. Do not install a JAR on a different Minecraft version just because the mod name is the same.
+The project creates a separate JAR for each Minecraft target. Never use a JAR built for a different game version.
 
-| Minecraft | Fabric Loader | Fabric API | Java | Build profile |
+| Minecraft Java | Fabric Loader | Fabric API | Java toolchain | Build profile |
 |---|---:|---:|---:|---|
-| 26.3 | 0.20.1 | 0.165.2+26.3 | 25 | Main |
-| 26.2 | 0.19.3 | 0.161.0+26.2 | 25 | Main |
-| 26.1.2 | 0.19.5 | 0.155.3+26.1.2 | 25 | Main |
-| 26.1 | 0.18.4 | 0.143.11+26.1 | 25 | Main |
-| 1.21.11 | 0.19.5 | 0.141.6+1.21.11 | 21 | Legacy |
+| 26.3 | 0.20.1 | 0.165.2+26.3 | 25 | Root |
+| 26.2 | 0.19.3 | 0.161.0+26.2 | 25 | `versions/26.1.2-26.2` |
+| 26.1.2 | 0.19.5 | 0.155.3+26.1.2 | 25 | `versions/26.1.2-26.2` |
+| 26.1 | 0.18.4 | 0.143.11+26.1 | 25 | `versions/26.1` |
+| 1.21.11 | 0.19.5 | 0.141.6+1.21.11 | 21 | `versions/1.21.11` |
 
-The 26.x targets use Mojang's unobfuscated names and the non-remapping Fabric Loom plugin. Minecraft 1.21.11 remains obfuscated and uses a separate remapping build and legacy source set. A JAR is built independently for each target.
+The 26.x releases use Mojang's unobfuscated names and the non-remapping Loom plugin. Minecraft 1.21.11 is still obfuscated and uses a separate remapping Loom project with a Java 21 compile toolchain. Gradle itself runs on Java 25 because the pinned current Loom plugin requires it.
+
+The 26.1 and 26.1.2 targets are intentionally separate: Minecraft 26.1 introduced the unobfuscated game and major rendering/API changes, and 26.1.2 received a later Fabric API line. The 26.1 profile registers its HUD through a small client mixin; the 26.1.2/26.2 profile uses the Fabric HUD registry.
 
 ## Features
 
@@ -48,19 +50,35 @@ All key bindings can be changed in Minecraft's Controls menu.
 
 ## Build
 
-For 26.x, install JDK 25 and Gradle 9.8.0:
+Use JDK 25 and Gradle 9.8.0 for the Gradle runtime. The 1.21.11 project also configures a Java 21 toolchain for compilation.
+
+For Minecraft 26.3:
 
 ```bash
 gradle --no-daemon clean build
 ```
 
-For Minecraft 1.21.11, run the independent legacy build from `versions/1.21.11` with JDK 21 available:
+For Minecraft 26.2 or 26.1.2, run from `versions/26.1.2-26.2` and set the matching properties:
 
 ```bash
+gradle --no-daemon clean build -Pminecraft_version=26.2 -Ploader_version=0.19.3 -Pfabric_api_version=0.161.0+26.2 -Pfabric_api_min=0.161.0
+```
+
+For Minecraft 26.1:
+
+```bash
+cd versions/26.1
 gradle --no-daemon clean build
 ```
 
-The CI workflow builds every target and uploads separate version-labelled artifacts. JARs are written to each profile's `build/libs/` directory.
+For Minecraft 1.21.11:
+
+```bash
+cd versions/1.21.11
+gradle --no-daemon clean build
+```
+
+GitHub Actions builds every target independently and uploads a version-labelled artifact for each successful build. The CI matrix is the compatibility gate; a target should be considered supported only after its corresponding build passes.
 
 ## Install
 
