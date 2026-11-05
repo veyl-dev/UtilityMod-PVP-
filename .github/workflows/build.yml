@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 jobs:
-  build-26.3:
+  build_26_3:
     name: Build Minecraft 26.3
     runs-on: ubuntu-latest
     steps:
@@ -36,7 +36,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-  build-26x-compat:
+  build_26x_compat:
     name: Build Minecraft ${{ matrix.minecraft }}
     runs-on: ubuntu-latest
     strategy:
@@ -82,7 +82,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-  build-26.1:
+  build_26_1:
     name: Build Minecraft 26.1
     runs-on: ubuntu-latest
     steps:
@@ -107,7 +107,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-  build-legacy:
+  build_legacy:
     name: Build Minecraft 1.21.11
     runs-on: ubuntu-latest
     steps:
@@ -140,7 +140,7 @@ jobs:
   release:
     name: Publish versioned JARs
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: [build-26.3, build-26x-compat, build-26.1, build-legacy]
+    needs: [build_26_3, build_26x_compat, build_26_1, build_legacy]
     runs-on: ubuntu-latest
     steps:
       - name: Download all version artifacts
