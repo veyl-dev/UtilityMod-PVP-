@@ -8,6 +8,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ public final class HudRenderer {
     public static void render(GuiGraphicsExtractor graphics, DeltaTracker tickCounter) {
         Minecraft client = Minecraft.getInstance();
         ModConfig config = UtilityModClient.CONFIG;
-        if (config == null || !config.enabled || client.player == null || client.level == null || client.options.hideGui) return;
+        if (config == null || !config.enabled || client.player == null || client.level == null || false) return;
 
         List<String> lines = new ArrayList<>();
         if (config.showCps) lines.add("CPS  L " + UtilityModClient.getLeftCps() + "  R " + UtilityModClient.getRightCps());
@@ -31,10 +32,9 @@ public final class HudRenderer {
                     + "  OBS " + count(inv, Items.OBSIDIAN));
         }
         if (config.showArmor) {
-            List<ItemStack> armor = client.player.getInventory().armor;
+            Iterable<ItemStack> armor = client.player.getArmorItems();
             StringBuilder armorLine = new StringBuilder("ARM ");
-            for (int i = armor.size() - 1; i >= 0; i--) {
-                ItemStack stack = armor.get(i);
+            for (ItemStack stack : armor) {
                 if (stack.isEmpty()) armorLine.append("-- ");
                 else if (stack.isDamageableItem()) {
                     int remaining = 100 - Math.round(stack.getDamageValue() * 100.0f / stack.getMaxDamage());
@@ -96,8 +96,9 @@ public final class HudRenderer {
 
     private static int count(Inventory inventory, Item item) {
         int total = 0;
-        for (ItemStack stack : inventory.items) if (stack.is(item)) total += stack.getCount();
-        for (ItemStack stack : inventory.offhand) if (stack.is(item)) total += stack.getCount();
+        for (ItemStack stack : inventory.getNonEquipmentItems()) if (stack.is(item)) total += stack.getCount();
+        ItemStack offhand = inventory.getItem(Inventory.SLOT_OFFHAND);
+        if (offhand.is(item)) total += offhand.getCount();
         return total;
     }
 }
