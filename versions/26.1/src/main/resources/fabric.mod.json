@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "utilitymod_pvp",
+  "version": "${version}",
+  "name": "UtilityMod-PVP",
+  "description": "A lightweight client-side PvP utility HUD and toolkit.",
+  "authors": ["veyl-dev"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": { "client": ["dev.veyl.utilitymodpvp.UtilityModClient"] },
+  "mixins": ["utilitymod_pvp.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "=26.1",
+    "java": ">=25",
+    "fabric-api": ">=0.143.11"
+  }
+}
