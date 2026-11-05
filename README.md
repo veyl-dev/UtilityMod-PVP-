@@ -21,7 +21,7 @@ A lightweight, client-side Minecraft PvP utility mod for Fabric.
 ## Controls
 | Key | Action |
 |---|---|
-| Right Shift | Open settings / HUD editor |
+| Left Shift | Open settings / HUD editor |
 | O | Toggle the HUD |
 | P | Toggle optional sprint |
 
@@ -51,7 +51,7 @@ The distributable JAR is written to `build/libs/`.
 4. Launch the Fabric profile.
 
 ## Configuration
-Launch the game once to generate the JSON configuration. Most settings can be changed in-game with Right Shift.
+Launch the game once to generate the JSON configuration. Most settings can be changed in-game with Left Shift.
 
 ## License
 MIT
