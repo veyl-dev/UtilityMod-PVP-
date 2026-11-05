@@ -75,7 +75,7 @@ public final class UtilityModClient implements ClientModInitializer {
         trimClicks(LEFT_CLICKS, now);
         trimClicks(RIGHT_CLICKS, now);
 
-        if (sprintEnabled && !client.player.isSprinting() && true) {
+        if (sprintEnabled && client.options.keyUp.isDown() && !client.player.isSprinting()) {
             client.player.setSprinting(true);
         }
     }
