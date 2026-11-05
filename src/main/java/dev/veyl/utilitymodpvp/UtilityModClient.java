@@ -39,12 +39,12 @@ public final class UtilityModClient implements ClientModInitializer {
                 "key.utilitymod_pvp.toggle_hud", InputConstants.Type.KEYBOARD, InputConstants.KEY_O, category
         ));
         toggleSprintKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-                "key.utilitymod_pvp.toggle_sprint", InputConstants.Type.KEYSYM, InputConstants.KEY_P, category
+                "key.utilitymod_pvp.toggle_sprint", InputConstants.Type.KEYBOARD, InputConstants.KEY_P, category
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(UtilityModClient::onEndTick);
         HudElementRegistry.addLast(
-                ResourceLocation.fromNamespaceAndPath(MOD_ID, "utility_hud"), HudRenderer::render
+                Identifier.fromNamespaceAndPath(MOD_ID, "utility_hud"), HudRenderer::render
         );
         LOGGER.info("UtilityMod-PVP initialized.");
     }
