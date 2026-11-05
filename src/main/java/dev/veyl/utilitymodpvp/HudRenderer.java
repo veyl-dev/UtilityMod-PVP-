@@ -97,7 +97,7 @@ public final class HudRenderer {
     private static int count(Inventory inventory, Item item) {
         int total = 0;
         for (ItemStack stack : inventory.getNonEquipmentItems()) if (stack.is(item)) total += stack.getCount();
-        ItemStack offhand = inventory.getItem(Inventory.SLOT_OFFHAND);
+        ItemStack offhand = inventory.getItem(40);
         if (offhand.is(item)) total += offhand.getCount();
         return total;
     }
