@@ -8,7 +8,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +31,10 @@ public final class HudRenderer {
                     + "  OBS " + count(inv, Items.OBSIDIAN));
         }
         if (config.showArmor) {
-            Iterable<ItemStack> armor = client.player.getArmorItems();
+            Inventory armorInventory = client.player.getInventory();
             StringBuilder armorLine = new StringBuilder("ARM ");
-            for (ItemStack stack : armor) {
+            for (int slot = 39; slot >= 36; slot--) {
+                ItemStack stack = armorInventory.getItem(slot);
                 if (stack.isEmpty()) armorLine.append("-- ");
                 else if (stack.isDamageableItem()) {
                     int remaining = 100 - Math.round(stack.getDamageValue() * 100.0f / stack.getMaxDamage());
