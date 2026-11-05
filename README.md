@@ -9,7 +9,7 @@ The project creates a separate JAR for each Minecraft target. Never use a JAR bu
 | Minecraft Java | Fabric Loader | Fabric API | Java toolchain | Build profile |
 |---|---:|---:|---:|---|
 | 26.3 | 0.20.1 | 0.165.2+26.3 | 25 | Root |
-| 26.2 | 0.19.3 | 0.161.0+26.2 | 25 | `versions/26.1.2-26.2` |
+| 26.2 | 0.19.3 | 0.161.0+26.2 | 25 | `versions/26.2` |
 | 26.1.2 | 0.19.5 | 0.155.3+26.1.2 | 25 | `versions/26.1.2-26.2` |
 | 26.1 | 0.18.4 | 0.143.11+26.1 | 25 | `versions/26.1` |
 | 1.21.11 | 0.19.5 | 0.141.6+1.21.11 | 21 | `versions/1.21.11` |
@@ -58,10 +58,18 @@ For Minecraft 26.3:
 gradle --no-daemon clean build
 ```
 
-For Minecraft 26.2 or 26.1.2, run from `versions/26.1.2-26.2` and set the matching properties:
+For Minecraft 26.2:
 
 ```bash
-gradle --no-daemon clean build -Pminecraft_version=26.2 -Ploader_version=0.19.3 -Pfabric_api_version=0.161.0+26.2 -Pfabric_api_min=0.161.0
+cd versions/26.2
+gradle --no-daemon clean build
+```
+
+For Minecraft 26.1.2, run from `versions/26.1.2-26.2` with the 26.1.2 properties:
+
+```bash
+cd versions/26.1.2-26.2
+gradle --no-daemon clean build -Pminecraft_version=26.1.2 -Ploader_version=0.19.5 -Pfabric_api_version=0.155.3+26.1.2 -Pfabric_api_min=0.155.3
 ```
 
 For Minecraft 26.1:
