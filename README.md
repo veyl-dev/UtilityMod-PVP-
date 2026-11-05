@@ -23,7 +23,7 @@ A lightweight, client-side Minecraft PvP utility mod for Fabric.
 The mod is client-side. It does not automate attacks, move inventory items, alter attack timing, or bypass server anti-cheat.
 
 ## Build
-Install JDK 25 and Gradle 9.7.1, then run:
+Install JDK 25 and Gradle 9.8.0, then run:
 
 ```bash
 gradle build
