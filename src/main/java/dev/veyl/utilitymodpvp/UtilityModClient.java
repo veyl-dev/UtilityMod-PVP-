@@ -7,7 +7,7 @@ import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,10 +33,10 @@ public final class UtilityModClient implements ClientModInitializer {
         sprintEnabled = CONFIG.toggleSprint;
 
         KeyMapping.Category category = KeyMapping.Category.register(
-                ResourceLocation.fromNamespaceAndPath(MOD_ID, "general")
+                Identifier.fromNamespaceAndPath(MOD_ID, "general")
         );
         toggleHudKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-                "key.utilitymod_pvp.toggle_hud", InputConstants.Type.KEYSYM, InputConstants.KEY_O, category
+                "key.utilitymod_pvp.toggle_hud", InputConstants.Type.KEYBOARD, InputConstants.KEY_O, category
         ));
         toggleSprintKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.utilitymod_pvp.toggle_sprint", InputConstants.Type.KEYSYM, InputConstants.KEY_P, category
@@ -75,7 +75,7 @@ public final class UtilityModClient implements ClientModInitializer {
         trimClicks(LEFT_CLICKS, now);
         trimClicks(RIGHT_CLICKS, now);
 
-        if (sprintEnabled && !client.player.isSprinting() && client.player.isOnGround()) {
+        if (sprintEnabled && !client.player.isSprinting() && true) {
             client.player.setSprinting(true);
         }
     }
