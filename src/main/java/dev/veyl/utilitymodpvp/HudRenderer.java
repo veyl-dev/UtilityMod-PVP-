@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -18,30 +17,30 @@ public final class HudRenderer {
     public static void render(GuiGraphicsExtractor graphics, DeltaTracker tickCounter) {
         Minecraft client = Minecraft.getInstance();
         ModConfig config = UtilityModClient.CONFIG;
-        if (config == null || !config.enabled || client.player == null || client.level == null || false) return;
+        if (config == null || !config.enabled || client.player == null || client.level == null) return;
 
-        List<String> lines = new ArrayList<>();
-        if (config.showCps) lines.add("CPS  L " + UtilityModClient.getLeftCps() + "  R " + UtilityModClient.getRightCps());
+        // Build only the enabled rows. No world scans, entity scans, threads or per-frame timers.
+        List<String> lines = new ArrayList<>(10);
+        if (config.showCps) {
+            lines.add("CPS  L " + UtilityModClient.getLeftCps() + "  R " + UtilityModClient.getRightCps());
+        }
         if (config.showItems) {
-            Inventory inv = client.player.getInventory();
-            lines.add("TOT " + count(inv, Items.TOTEM_OF_UNDYING)
-                    + "  CR " + count(inv, Items.END_CRYSTAL)
-                    + "  PE " + count(inv, Items.ENDER_PEARL));
-            lines.add("GAP " + count(inv, Items.GOLDEN_APPLE)
-                    + "  OBS " + count(inv, Items.OBSIDIAN));
+            int[] counts = countCombatItems(client.player.getInventory());
+            lines.add("TOT " + counts[0] + "  CR " + counts[1] + "  PE " + counts[2]);
+            lines.add("GAP " + counts[3] + "  OBS " + counts[4]);
         }
         if (config.showArmor) {
-            Inventory armorInventory = client.player.getInventory();
-            StringBuilder armorLine = new StringBuilder("ARM ");
+            Inventory inventory = client.player.getInventory();
+            StringBuilder armor = new StringBuilder("ARM ");
             for (int slot = 39; slot >= 36; slot--) {
-                ItemStack stack = armorInventory.getItem(slot);
-                if (stack.isEmpty()) armorLine.append("-- ");
+                ItemStack stack = inventory.getItem(slot);
+                if (stack.isEmpty()) armor.append("-- ");
                 else if (stack.isDamageableItem()) {
                     int remaining = 100 - Math.round(stack.getDamageValue() * 100.0f / stack.getMaxDamage());
-                    armorLine.append(remaining).append("% ");
-                } else armorLine.append("100% ");
+                    armor.append(remaining).append("% ");
+                } else armor.append("100% ");
             }
-            lines.add(armorLine.toString().trim());
+            lines.add(armor.toString().trim());
         }
         if (config.showEffects && !client.player.getActiveEffects().isEmpty()) {
             StringBuilder effects = new StringBuilder("FX ");
@@ -51,8 +50,8 @@ public final class HudRenderer {
             lines.add(effects.toString().trim());
         }
         if (config.showCoordinates) {
-            lines.add(String.format("XYZ  %d  %d  %d",
-                    client.player.getBlockX(), client.player.getBlockY(), client.player.getBlockZ()));
+            lines.add("XYZ  " + client.player.getBlockX() + "  "
+                    + client.player.getBlockY() + "  " + client.player.getBlockZ());
         }
         if (config.showFps) lines.add("FPS  " + client.getFps());
         if (config.showPing && client.getConnection() != null) {
@@ -94,11 +93,19 @@ public final class HudRenderer {
         return down ? "[" + label + "]" : label;
     }
 
-    private static int count(Inventory inventory, Item item) {
-        int total = 0;
-        for (ItemStack stack : inventory.getNonEquipmentItems()) if (stack.is(item)) total += stack.getCount();
-        ItemStack offhand = inventory.getItem(40);
-        if (offhand.is(item)) total += offhand.getCount();
-        return total;
+    // Count all five tracked combat items in one inventory pass instead of scanning five times.
+    private static int[] countCombatItems(Inventory inventory) {
+        int[] counts = new int[5];
+        for (ItemStack stack : inventory.getNonEquipmentItems()) addCount(counts, stack);
+        addCount(counts, inventory.getItem(40));
+        return counts;
+    }
+
+    private static void addCount(int[] counts, ItemStack stack) {
+        if (stack.is(Items.TOTEM_OF_UNDYING)) counts[0] += stack.getCount();
+        else if (stack.is(Items.END_CRYSTAL)) counts[1] += stack.getCount();
+        else if (stack.is(Items.ENDER_PEARL)) counts[2] += stack.getCount();
+        else if (stack.is(Items.GOLDEN_APPLE)) counts[3] += stack.getCount();
+        else if (stack.is(Items.OBSIDIAN)) counts[4] += stack.getCount();
     }
 }
